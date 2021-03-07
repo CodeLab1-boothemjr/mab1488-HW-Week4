@@ -12,8 +12,10 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // frame-based step for speed
         float step =  speed * Time.deltaTime;
         
+        // WASD controls
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += Vector3.forward * step;
@@ -36,7 +38,6 @@ public class PlayerControl : MonoBehaviour
     {
         if (other.gameObject.name == "EndPos")
         {
-            //TODO why does this have to be static?
             GameManager.AdvanceCurrentLevel();
         }
     }

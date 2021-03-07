@@ -14,8 +14,9 @@ public class GameManager : MonoBehaviour
     
     const string DIR_LOGS = "/Logs";
     private const string FILE_LEVEL = DIR_LOGS + "/level.txt";
-    //TODO why does this have to be static?
+    private const string GAME_STATE = DIR_LOGS + "/state.txt";
     private static string FILE_PATH_LEVEL;
+    private static string FILE_PATH_GAME_STATE;
 
     void Awake()
     {
@@ -32,7 +33,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        FILE_PATH_GAME_STATE = Application.dataPath + GAME_STATE;
         FILE_PATH_LEVEL = Application.dataPath + FILE_LEVEL;
+        
         if (File.Exists(FILE_PATH_LEVEL))
         {
             //parse level from file if there's a file available
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviour
             //start at level 0
             _currentLevel = 0;
         }
+                
         //load the correct level
         SceneManager.LoadScene(_currentLevel);
         Debug.Log("LEVEL LOADED");
@@ -59,7 +63,27 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKey(KeyCode.P))
+        {
+            SaveState();
+        }
 
+        if (Input.GetKey(KeyCode.L))
+        {
+            LoadState();
+        }
+        
+        // remove saved level + meta files
+        //todo - add method for removing saved level file
+        if (Input.GetKey(KeyCode.N))
+        {
+            if (File.Exists(FILE_PATH_LEVEL))
+            {
+                File.Delete(FILE_PATH_LEVEL);
+                File.Delete(FILE_PATH_LEVEL + ".meta");
+                Debug.Log("FILE REMOVED");
+            }
+        }
     }
 
     public static void AdvanceCurrentLevel()
@@ -78,6 +102,16 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("YOU WIN!");
         }
+        
+    }
+
+    private static void SaveState()
+    {
+        
+    }
+
+    private static void LoadState()
+    {
         
     }
 }
