@@ -50,3 +50,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 ZombieRun/Assets/Scratchpad/
+ZombieRun/Assets/Logs.meta
+ZombieRun/Assets/Logs/state.txt
+ZombieRun/Assets/Logs/state.txt.meta

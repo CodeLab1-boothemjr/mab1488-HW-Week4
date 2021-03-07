@@ -2,8 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = System.Object;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour
 {
@@ -63,18 +67,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // todo: save the game state
         if (Input.GetKey(KeyCode.P))
         {
             SaveState();
         }
 
+        // todo: load the game state
         if (Input.GetKey(KeyCode.L))
         {
             LoadState();
         }
         
         // remove saved level + meta files
-        //todo - add method for removing saved level file
         if (Input.GetKey(KeyCode.N))
         {
             if (File.Exists(FILE_PATH_LEVEL))
@@ -105,13 +110,62 @@ public class GameManager : MonoBehaviour
         
     }
 
+    // bug: does not currently update to correct level
     private static void SaveState()
     {
+        string text = "";
         
+        // save player position
+        GameObject player = GameObject.FindWithTag("Player");
+        text += player.transform.position;
+
+        // save enemy positions
+
+        // todo: save scene index 
+        
+        // write to file
+        File.WriteAllText(FILE_PATH_GAME_STATE, text);
+        Debug.Log("Game State Saved!");
     }
 
     private static void LoadState()
     {
+        // copy players + enemies
+        GameObject player = GameObject.FindWithTag("Player");
+        GameObject enemy = GameObject.FindWithTag("Enemy");
         
+        // todo: not working
+        // destroy players and enemies
+        //GameObject.Destroy(GameObject.FindWithTag("Player"));
+
+        // load gamestate from file
+        string text = File.ReadAllText(FILE_PATH_GAME_STATE);
+        
+        // load player position
+        player.transform.position = StringToVector3(text);
+        
+        //Instantiate(player, Vector3.zero, Quaternion.identity);
+
+        // load enemy positions
+
+        // todo: load scene index
+
     }
+    public static Vector3 StringToVector3(string textVector)
+    {
+        // substring to remove parentheses
+        textVector = textVector.Substring(1, textVector.Length-2);
+
+        // split the items
+        string[] sArray = textVector.Split(',');
+        
+        // store in Vector3
+        Vector3 result = new Vector3(
+            float.Parse(sArray[0]),
+            float.Parse(sArray[1]),
+            float.Parse(sArray[2]));
+
+        return result;
+    }
+    
 }
