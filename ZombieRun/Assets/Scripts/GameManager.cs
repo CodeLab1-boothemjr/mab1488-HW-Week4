@@ -117,9 +117,14 @@ public class GameManager : MonoBehaviour
         
         // save player position
         GameObject player = GameObject.FindWithTag("Player");
-        text += player.transform.position;
+        text += player.transform.position + "\n";
 
         // save enemy positions
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            text += enemies[i].transform.position + "\n";
+        }
 
         // todo: save scene index 
         
@@ -130,23 +135,32 @@ public class GameManager : MonoBehaviour
 
     private static void LoadState()
     {
-        // copy players + enemies
+        // connect player (for moving)
         GameObject player = GameObject.FindWithTag("Player");
+        
+        // connect enemy object (for instantiating)
         GameObject enemy = GameObject.FindWithTag("Enemy");
         
-        // todo: not working
-        // destroy players and enemies
-        //GameObject.Destroy(GameObject.FindWithTag("Player"));
+        // destroy enemies
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            Destroy(enemies[i]);
+        }
 
         // load gamestate from file
         string text = File.ReadAllText(FILE_PATH_GAME_STATE);
         
         // load player position
-        player.transform.position = StringToVector3(text);
-        
-        //Instantiate(player, Vector3.zero, Quaternion.identity);
+        string[] textArr = text.Split('\n');
+        player.transform.position = StringToVector3(textArr[0]);
 
         // load enemy positions
+        for (int i = 1; i < textArr.Length-1; i++)
+        {
+            GameObject newEnemy =  Instantiate(enemy);
+            newEnemy.transform.position = StringToVector3(textArr[i]);
+        }
 
         // todo: load scene index
 
